@@ -11,7 +11,7 @@ import { AppConfig } from "./config";
 
 import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
-import strategicGoalRouter from "./routes/strategic-goals";
+import strategicGoalRouter from "./routes/strategic-goals.route";
 
 const dbEngine = AppConfig.databaseEngine
 const dbConnector = new DBConnector(dbEngine);
