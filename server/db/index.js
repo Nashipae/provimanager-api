@@ -1,15 +1,19 @@
 import { mongoConnector } from "./mongo_connector";
 
-const DBConnector = {
-  connect: (dbEngine = "mongodb") => {
+export default class DBConnector {
+  constructor(dbEngine = "mongodb") {
     switch (dbEngine) {
       case "mongodb":
-        mongoConnector;
+        this.connector = mongoConnector;
         break;
       default:
-        mongoConnector;
+        this.connector = mongoConnector;
         break;
     }
   }
-};
-export default DBConnector;
+
+  connect(){
+    this.connector()
+  }
+}
+

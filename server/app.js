@@ -14,8 +14,11 @@ import usersRouter from "./routes/users";
 import strategicGoalRouter from "./routes/strategic-goals";
 
 const dbEngine = AppConfig.databaseEngine
-DBConnector.connect(dbEngine);
+const dbConnector = new DBConnector(dbEngine);
+dbConnector.connect()
 var app = express();
+app.use(cors())
+app.use(helmet())
 app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(express.json());
@@ -25,6 +28,5 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api", strategicGoalRouter);
-app.use(cors)
-app.use(helmet)
+
 export default app;
