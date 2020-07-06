@@ -1,6 +1,15 @@
 
 import dotenv from 'dotenv'
 
-const Config = dotenv.config({path: __dirname+'../.env'}).parsed
+const Config = dotenv.config()
 
-var PRODUCTION = process.env.NODE_ENV === 'production'
+if (Config.error) {
+  throw Config.error
+}
+
+export const AppConfig = {
+  databaseEngine: Config.parsed.DATABASE_ENGINE || "mongodb",
+  databaseUri: Config.parsed.DATABASE_URI,
+}
+
+
