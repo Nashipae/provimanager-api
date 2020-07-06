@@ -1,8 +1,10 @@
 import express from "express";
-import StragicGoalService from "./../services/strategic-goals"
+import {newStrategicGoal} from "./../services/strategic-goals"
 
-export const strategicGoalRouter = express.Router();
+const strategicGoalRouter = express.Router();
 
 strategicGoalRouter.post("/strategic-goal", (req, res) => {
-  StragicGoalService().newStragicGoal(req, res)
+  newStrategicGoal(req, res)
 });
+
+module.exports = strategicGoalRouter
