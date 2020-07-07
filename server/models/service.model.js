@@ -4,10 +4,7 @@ const ServiceModel = new mongoose.Schema(
   {
     name: String,
     serviceCategory: String,
-    strategicGoals: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "StrategicGoal"
-    }]
+    strategicGoals: []
   },
   { timestamps: true },
   {
