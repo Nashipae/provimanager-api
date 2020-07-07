@@ -4,15 +4,12 @@ const ServiceModel = new mongoose.Schema(
   {
     name: String,
     serviceCategory: String,
-    strategicGoals: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "StrategicGoal"
-    }]
+    strategicGoals: []
   },
   { timestamps: true },
   {
-    collection: "ServiceModel"
+    collection: "Service"
   }
 );
 
-export default mongoose.model("ServiceModel", ServiceModel);
+export default mongoose.model("Service", ServiceModel);

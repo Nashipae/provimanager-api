@@ -26,7 +26,7 @@ const list = async (req, res) => {
     });
   return res;
 };
-export const StrategicGoalService = {
+export const StrategicGoaslService = {
   create: create,
   list: list
 };

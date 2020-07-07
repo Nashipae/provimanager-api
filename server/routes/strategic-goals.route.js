@@ -1,14 +1,14 @@
 import express from "express";
-import { StrategicGoalService } from "../services/strategic-goals.service";
+import { StrategicGoalsService } from "../services/strategic-goals.service";
 
 const strategicGoalRouter = express.Router();
 
 strategicGoalRouter.post("/strategic-goal", (req, res) => {
-  StrategicGoalService.create(req, res);
+  StrategicGoalsService.create(req, res);
 });
 
 strategicGoalRouter.get("/strategic-goal", (req, res) => {
-  StrategicGoalService.list(req,res)
+  StrategicGoalsService.list(req,res)
 })
 
 module.exports = strategicGoalRouter;
