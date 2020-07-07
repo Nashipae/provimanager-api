@@ -2,7 +2,7 @@ import ServiceModel from "../models/service.model";
 import { checkServerError } from "./utils/error-handlers";
 import { makeServiceRecord } from "./utils/service.util";
 
-const create = (req, res) => {
+const create = async (req, res) => {
   const serviceRecord = makeServiceRecord(req)
   const service = new ServiceModel(serviceRecord)
   await service.save(err => {

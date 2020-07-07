@@ -8,8 +8,8 @@ const ServiceModel = new mongoose.Schema(
   },
   { timestamps: true },
   {
-    collection: "ServiceModel"
+    collection: "Service"
   }
 );
 
-export default mongoose.model("ServiceModel", ServiceModel);
+export default mongoose.model("Service", ServiceModel);
