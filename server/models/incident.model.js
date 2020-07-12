@@ -4,7 +4,11 @@ const IncidentModel = new mongoose.Schema(
   {
     description: String,
     fulfillment: Boolean,
-    satisfaction: Number
+    satisfaction: Number,
+    _contract: {
+      type: mongoose.ObjectId,
+      ref: "Contract"
+    }
   },
   { timestamps: true },
   {
