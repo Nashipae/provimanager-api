@@ -5,6 +5,7 @@ const ContractModel = new mongoose.Schema(
     name: String,
     description: String,
     contract_file: String,
+    signature: String,
     state: String,
     dateStart: String,
     dateEnd: String,
@@ -16,12 +17,24 @@ const ContractModel = new mongoose.Schema(
         ref: "Incident"
       }
     ],
-    services: [],
+    supplier_contracts: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Supplier"
+      }
+    ],
+    service: {
+      type: mongoose.ObjectId,
+      ref: "Service"
+    },
     percentage: Number,
     in_charge_points: Number,
     quality_points: Number,
     contract_points: Number,
-    supplier_points: Number
+    _provider: {
+      type: mongoose.ObjectId,
+      ref: "Provider"
+    }
   },
   { timestamps: true },
   {

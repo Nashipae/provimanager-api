@@ -27,6 +27,7 @@ const list = async (req, res) => {
     });
   return res;
 };
+
 export const TasksService = {
   create: create,
   list: list

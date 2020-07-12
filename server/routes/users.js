@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
+import express from "express";
+import { UsersService } from "../services/user.service";
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+const userRouter = express.Router();
+
+userRouter.post("/", (req, res) => {
+    UsersService.create(req, res);
 });
 
-module.exports = router;
+userRouter.get("/", (req, res) => {
+    UsersService.list(req, res);
+})
+
+module.exports = userRouter;

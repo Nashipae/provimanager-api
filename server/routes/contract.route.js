@@ -15,4 +15,8 @@ contractRouter.post("/contract/:id/add_incident", (req, res) => {
     ContractsService.addIncident(req, res)
 })
 
+contractRouter.post("/contract/:id/add_supplier", (req, res) => {
+    ContractsService.addSupplier(req, res)
+})
+
 module.exports = contractRouter;
