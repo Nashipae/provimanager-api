@@ -31,7 +31,21 @@ const list = async (req, res) => {
   return res;
 };
 
+const returnUser = async (req, res) => {
+    const user = UserModel.find({username: req.params.username, password: req.params.password});
+    user
+      .exec()
+      .then(user => {
+        res.status(200).json(user);
+      })
+      .catch((err, docs) => {
+        if (checkServerError(res, err)) return;
+      });
+    return res;
+  };
+
 export const UsersService = {
   create: create,
-  list: list
+  list: list,
+  returnUser: returnUser
 };
