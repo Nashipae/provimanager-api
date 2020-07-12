@@ -10,6 +10,11 @@ const SupplierModel = new mongoose.Schema(
     cell: String,
     ruc: String,
     state: String,
+    contract_points: Number,
+    _contract: {
+      type: mongoose.ObjectId,
+      ref: "Contract"
+    }
   },
   { timestamps: true },
   {

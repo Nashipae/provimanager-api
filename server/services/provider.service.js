@@ -37,6 +37,7 @@ const list = async (req, res) => {
     });
   return res;
 };
+
 export const ProvidersService = {
   create: create,
   list: list
