@@ -1,11 +1,8 @@
 import IncidentModel from "../models/incident.model";
 import { checkServerError } from "./utils/error-handlers";
-
+import { makeIncidentRecord } from "./utils/incident.util"
 const create = async (req, res) => {
-  const incidentRecord = Object.freeze({
-    name: req.body.name,
-    description: req.body.description
-  });
+  const incidentRecord = makeIncidentRecord(req)
   const incident = new IncidentModel(incidentRecord);
   await incident.save(err => {
     if (checkServerError(res, err)) return;

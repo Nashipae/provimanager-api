@@ -10,7 +10,12 @@ const ContractModel = new mongoose.Schema(
     dateEnd: String,
     task_contracts: [],
     agreement_contracts: [],
-    incident_contracts: [],
+    incident_contracts: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Incident"
+      }
+    ],
     services: [],
     percentage: Number,
     in_charge_points: Number,
