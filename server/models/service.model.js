@@ -4,7 +4,14 @@ const ServiceModel = new mongoose.Schema(
   {
     name: String,
     serviceCategory: String,
-    strategicGoals: []
+    strategicGoals: [],
+    contracts: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Contract"
+      }
+    ],
+
   },
   { timestamps: true },
   {

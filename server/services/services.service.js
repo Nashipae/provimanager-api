@@ -11,8 +11,10 @@ const create = async (req, res) => {
   return res.status(200).json(service)
 }
 
-const list = (req, res) => {
-  return res.status(200).json({})
+const list = async (req, res) => {
+  const services =  await ServiceModel.find()
+    .populate("contracts").exec();
+  return res.status(201).json(services);
 }
 
 export const ServicesService = {

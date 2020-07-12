@@ -4,6 +4,7 @@ import { checkServerError } from "./utils/error-handlers";
 import { makeContractRecord } from "./utils/contract.util";
 import { makeIncidentRecord } from "./utils/incident.util";
 import SupplierModel from "../models/supplier.model";
+import ServiceModel from "../models/service.model";
 
 const create = async (req, res) => {
   let contractRecord;
@@ -12,11 +13,17 @@ const create = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-
   const contract = new ContractModel(contractRecord);
   await contract.save(err => {
     if (checkServerError(res, err)) return;
   });
+
+  const serviceUpdated = await ServiceModel.findByIdAndUpdate(
+    req.body.service_id, {$push: {
+      contracts: contract._id
+    }}
+  ).exec();
+
   return res.status(200).json(contract);
 };
 
