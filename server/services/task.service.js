@@ -16,7 +16,6 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   const tasks = TaskModel.find({});
-
   tasks
     .exec()
     .then(tasks => {

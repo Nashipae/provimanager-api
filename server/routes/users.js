@@ -7,7 +7,7 @@ userRouter.post("/user", (req, res) => {
     UsersService.create(req, res);
 });
 
-userRouter.get("/", (req, res) => {
+userRouter.get("/user", (req, res) => {
     UsersService.list(req, res);
 })
 

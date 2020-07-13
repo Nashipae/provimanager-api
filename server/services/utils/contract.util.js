@@ -30,7 +30,9 @@ export const makeContractRecord = req => {
       in_charge_points: req.body.in_charge_points,
       quality_points: req.body.quality_points,
       contract_points: req.body.contract_points,
-      supplier_points: req.body.supplier_points
+      supplier_points: req.body.supplier_points,
+      _service: req.body.service_id,
+      _provider: req.body.provider_id
     }))(req);
   
     return Object.freeze(contractRecord)

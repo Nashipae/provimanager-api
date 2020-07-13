@@ -23,7 +23,7 @@ const ContractModel = new mongoose.Schema(
         ref: "Supplier"
       }
     ],
-    service: {
+    _service: {
       type: mongoose.ObjectId,
       ref: "Service"
     },

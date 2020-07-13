@@ -11,6 +11,10 @@ contractRouter.get("/contract", (req, res) => {
     ContractsService.list(req, res);
 })
 
+contractRouter.get("/contract_provider/:id", (req, res) => {
+    ContractsService.listContractsByProvider(req, res);
+})
+
 contractRouter.post("/contract/:id/add_incident", (req, res) => {
     ContractsService.addIncident(req, res)
 })

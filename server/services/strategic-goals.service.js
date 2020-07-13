@@ -13,6 +13,18 @@ const create = async (req, res) => {
   return res.status(200).json(strategicGoal);
 };
 
+const createMany = async (req, res) => {
+  const strategicGoals = await StrategicGoalModel.insertMany(req.body)
+  .then(function(docs) {
+       // do something with docs
+  })
+  .catch(function(err) {
+      // error handling here
+  });
+
+  return res.status(200).json(strategicGoals);
+};
+
 const list = async (req, res) => {
   const strategicGoals = StrategicGoalModel.find({});
 
@@ -28,5 +40,6 @@ const list = async (req, res) => {
 };
 export const StrategicGoalsService = {
   create: create,
-  list: list
+  list: list,
+  createMany: createMany
 };

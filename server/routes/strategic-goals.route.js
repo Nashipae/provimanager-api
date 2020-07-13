@@ -7,6 +7,10 @@ strategicGoalRouter.post("/strategic-goal", (req, res) => {
   StrategicGoalsService.create(req, res);
 });
 
+strategicGoalRouter.post("/strategic-goals", (req, res) => {
+  StrategicGoalsService.createMany(req, res);
+});
+
 strategicGoalRouter.get("/strategic-goal", (req, res) => {
   StrategicGoalsService.list(req,res)
 })

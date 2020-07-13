@@ -1,5 +1,6 @@
 import ProviderModel from "../models/provider.model";
 import { checkServerError } from "./utils/error-handlers";
+import contractModel from "../models/contract.model";
 
 const create = async (req, res) => {
   const providerRecord = Object.freeze({
@@ -13,8 +14,7 @@ const create = async (req, res) => {
     web: req.body.web,
     ruc: req.body.ruc,
     state: req.body.state,
-    provider_type: req.body.provider_type,
-    category: req.body.category
+    provider_type: req.body.provider_type
   });
   const provider = new ProviderModel(providerRecord);
   await provider.save(err => {
@@ -37,6 +37,7 @@ const list = async (req, res) => {
     });
   return res;
 };
+
 
 export const ProvidersService = {
   create: create,
