@@ -6,6 +6,7 @@ import { makeIncidentRecord } from "./utils/incident.util";
 import SupplierModel from "../models/supplier.model";
 import ServiceModel from "../models/service.model";
 import ProviderModel from "../models/provider.model";
+import TaskModel from "../models/task.model";
 
 const create = async (req, res) => {
   let contractRecord;
@@ -71,7 +72,7 @@ const addIncident = async (req, res) => {
     }
   ).exec();
 
-  return res.status(201).json(contractFoundById);
+  return res.status(201).json(incident);
 };
 
 const addSupplier = async (req, res) => {

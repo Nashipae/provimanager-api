@@ -11,4 +11,8 @@ providerRouter.get("/provider", (req, res) => {
     ProvidersService.list(req, res);
 })
 
+providerRouter.get("/provider_suppliers/:id", (req, res) => {
+    ProvidersService.listSuppliersByProvider(req, res);
+})
+
 module.exports = providerRouter;

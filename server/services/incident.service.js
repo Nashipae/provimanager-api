@@ -24,7 +24,21 @@ const list = async (req, res) => {
     });
   return res;
 };
+
+const edit = async (req, res) => {
+  const incidentUpdated = await IncidentModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      fulfillment: req.body.fulfillment,
+      satisfaction: req.body.satisfaction
+    }, {new: true}
+  ).exec();
+
+  return res.status(200).json(incidentUpdated);
+};
+
 export const IncidentsService = {
   create: create,
-  list: list
+  list: list,
+  edit: edit
 };

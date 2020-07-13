@@ -1,6 +1,6 @@
 import ProviderModel from "../models/provider.model";
 import { checkServerError } from "./utils/error-handlers";
-import contractModel from "../models/contract.model";
+import ContractModel from "../models/contract.model";
 
 const create = async (req, res) => {
   const providerRecord = Object.freeze({
@@ -38,8 +38,22 @@ const list = async (req, res) => {
   return res;
 };
 
+const listSuppliersByProvider = async (req, res) => {
+  const contracts =  await ContractModel.find({_provider: req.params.id})
+    .populate("supplier_contracts").exec();
+
+  let suppliers = [];
+  contracts.forEach(c => {
+    c.supplier_contracts.forEach(s => {
+      suppliers.push(s);
+    })
+  });
+  return res.status(201).json(suppliers);
+};
+
 
 export const ProvidersService = {
   create: create,
-  list: list
+  list: list,
+  listSuppliersByProvider: listSuppliersByProvider
 };
