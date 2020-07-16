@@ -11,6 +11,10 @@ contractRouter.get("/contract", (req, res) => {
     ContractsService.list(req, res);
 })
 
+contractRouter.get("/contract/:id", (req, res) => {
+    ContractsService.listById(req, res);
+})
+
 contractRouter.get("/contract_provider/:id", (req, res) => {
     ContractsService.listContractsByProvider(req, res);
 })
@@ -21,6 +25,10 @@ contractRouter.post("/contract/:id/add_incident", (req, res) => {
 
 contractRouter.post("/contract/:id/add_supplier", (req, res) => {
     ContractsService.addSupplier(req, res)
+})
+
+contractRouter.post("/contract/:id/update_task", (req, res) => {
+    ContractsService.updateTask(req, res)
 })
 
 module.exports = contractRouter;

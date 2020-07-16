@@ -11,4 +11,8 @@ taskRouter.get("/task", (req, res) => {
     TasksService.list(req, res);
 })
 
+taskRouter.patch("/task/:id", (req, res) => {
+    TasksService.updateTask(req, res);
+})
+
 module.exports = taskRouter;

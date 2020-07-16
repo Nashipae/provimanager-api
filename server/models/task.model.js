@@ -2,12 +2,16 @@ import mongoose from "mongoose";
 
 const TaskModel = new mongoose.Schema(
   {
-    dateLimit: Date,
-    dateEnd: Date,
+    dateLimit: String,
+    dateEnd: String,
     task_points: Number,
     name: String,
     notification: Boolean,
-    done: Boolean
+    done: Boolean,
+    _contract: {
+      type: mongoose.ObjectId,
+      ref: "Contract"
+    }
   },
   { timestamps: true },
   {

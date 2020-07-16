@@ -3,17 +3,17 @@ import IncidentModel from "../models/incident.model";
 import { checkServerError } from "./utils/error-handlers";
 import { makeContractRecord } from "./utils/contract.util";
 import { makeIncidentRecord } from "./utils/incident.util";
+import { makeSupplierRecord } from "./utils/supplier.util";
 import SupplierModel from "../models/supplier.model";
 import ServiceModel from "../models/service.model";
 import ProviderModel from "../models/provider.model";
 import TaskModel from "../models/task.model";
+import { TasksService } from "./task.service";
 
 const create = async (req, res) => {
   let contractRecord;
   try {
     contractRecord = makeContractRecord(req);
-    console.log("Contract");
-    console.log(contractRecord);
   } catch (error) {
     console.log(error);
   }
@@ -28,7 +28,17 @@ const create = async (req, res) => {
       contracts: contract._id
     }}
   ).exec();
-
+  
+  req.body.task_contracts.forEach( async (task) => {
+    const createdTask = await TasksService.createFromContract(res, task, contract._id);
+    console.log(createdTask);
+    await ContractModel.findByIdAndUpdate(
+      contract._id, {$push: {
+        task_contracts: createdTask._id
+      }}
+    ).exec();
+  });
+  
   const providerSearched = await ProviderModel.findById(req.body.provider_id)
   let providerCategoria = providerSearched.category;
   if(providerCategoria == "Básico" && (serviceUpdated.serviceCategory == "Servicio Estratégico" || serviceUpdated == "Servicio Táctico" || serviceUpdated.serviceCategory == "Servicio Operativo")){
@@ -50,7 +60,17 @@ const create = async (req, res) => {
 
 const list = async (req, res) => {
   const contracts =  await ContractModel.find()
-    .populate("service")
+    .populate("task_contracts")
+    .populate("_service")
+    .populate("incident_contracts")
+    .populate("supplier_contracts").exec();
+  return res.status(201).json(contracts);
+};
+
+const listById = async (req, res) => {
+  const contracts =  await ContractModel.findById(req.params.id)
+    .populate("task_contracts")
+    .populate("_service")
     .populate("incident_contracts")
     .populate("supplier_contracts").exec();
   return res.status(201).json(contracts);
@@ -96,6 +116,7 @@ const addSupplier = async (req, res) => {
 
 const listContractsByProvider = async (req, res) => {
   const contracts =  await ContractModel.find({_provider: req.params.id})
+    .populate("task_contracts")
     .populate("_service")
     .populate("incident_contracts")
     .populate("supplier_contracts").exec();
@@ -106,6 +127,7 @@ const listContractsByProvider = async (req, res) => {
 export const ContractsService = {
   create: create,
   list: list,
+  listById: listById,
   addIncident: addIncident,
   addSupplier: addSupplier,
   listContractsByProvider: listContractsByProvider
