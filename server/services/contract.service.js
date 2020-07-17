@@ -120,8 +120,30 @@ const listContractsByProvider = async (req, res) => {
     .populate("_service")
     .populate("incident_contracts")
     .populate("supplier_contracts").exec();
-  console.log(contracts)
   return res.status(201).json(contracts);
+};
+
+const udpateContractState = async (req, res) => {
+  const contract =  await ContractModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      in_charge_points: req.body.in_charge_points,
+      quality_points: req.body.quality_points,
+      contract_points: req.body.contract_points,
+      state: req.body.state
+    }
+  ).exec();
+
+  if(req.body.supplier_points != undefined){
+    req.body.supplier_points.forEach( async s =>{
+      await SupplierModel.findByIdAndUpdate( 
+        s._id, {
+        contract_points: s.contract_points
+      }).exec();
+    })
+  }
+
+  return res.status(201).json(contract);
 };
 
 export const ContractsService = {
@@ -130,5 +152,6 @@ export const ContractsService = {
   listById: listById,
   addIncident: addIncident,
   addSupplier: addSupplier,
-  listContractsByProvider: listContractsByProvider
+  listContractsByProvider: listContractsByProvider,
+  udpateContractState: udpateContractState
 };

@@ -15,4 +15,8 @@ providerRouter.get("/provider_suppliers/:id", (req, res) => {
     ProvidersService.listSuppliersByProvider(req, res);
 })
 
+providerRouter.get("/provider_avgs/:id", (req, res) => {
+    ProvidersService.listAverageProvider(req, res);
+})
+
 module.exports = providerRouter;

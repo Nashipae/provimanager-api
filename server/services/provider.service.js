@@ -51,9 +51,29 @@ const listSuppliersByProvider = async (req, res) => {
   return res.status(201).json(suppliers);
 };
 
+const listAverageProvider = async (req, res) => {
+  const contracts =  await ContractModel.find({_provider: req.params.id})
+  let suma_quality = 0;
+  let suma_in_charge = 0;
+  let suma_contract = 0;
+  contracts.forEach(c => {
+    suma_quality += c.quality_points != undefined ? c.quality_points : 0;
+    suma_in_charge += c.in_charge_points != undefined ? c.in_charge_points : 0;
+    suma_contract += c.contract_points != undefined ? c.contract_points : 0;
+  });
+
+  let scores = {
+    quality_points_avg: suma_quality/contracts.filter(c=>c.state == "Calificado").length,
+    in_charge_points_avg: suma_in_charge/contracts.filter(c=>c.state == "Calificado").length,
+    contract_points_avg: suma_contract/contracts.length,
+  };
+  return res.status(201).json(scores);
+};
+
 
 export const ProvidersService = {
   create: create,
   list: list,
-  listSuppliersByProvider: listSuppliersByProvider
+  listSuppliersByProvider: listSuppliersByProvider,
+  listAverageProvider: listAverageProvider
 };

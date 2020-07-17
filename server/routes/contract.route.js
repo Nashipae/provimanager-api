@@ -31,4 +31,8 @@ contractRouter.post("/contract/:id/update_task", (req, res) => {
     ContractsService.updateTask(req, res)
 })
 
+contractRouter.patch("/contract/:id", (req, res) => {
+    ContractsService.udpateContractState(req, res)
+})
+
 module.exports = contractRouter;
