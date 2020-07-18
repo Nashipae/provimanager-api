@@ -11,4 +11,8 @@ serviceRouter.get("/service", (req, res) => {
   ServicesService.list(req, res);
 })
 
+serviceRouter.get("/service_providers/:id", (req, res) => {
+  ServicesService.listContracts(req, res);
+})
+
 module.exports = serviceRouter;

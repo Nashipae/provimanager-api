@@ -19,4 +19,12 @@ providerRouter.get("/provider_avgs/:id", (req, res) => {
     ProvidersService.listAverageProvider(req, res);
 })
 
+providerRouter.get("/provider_avgs", (req, res) => {
+    ProvidersService.listAverageProviders(req, res);
+})
+
+providerRouter.get("/provider_points/:id", (req, res) => {
+    ProvidersService.listHistoricPoints(req, res);
+})
+
 module.exports = providerRouter;

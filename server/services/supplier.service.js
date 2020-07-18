@@ -11,6 +11,7 @@ const create = async (req, res) => {
     cell: req.body.cell,
     ruc: req.body.ruc,
     state: req.body.state,
+    number_contracts: 0,
   });
   const supplier = new SupplierModel(supplierRecord);
   await supplier.save(err => {

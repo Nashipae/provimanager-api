@@ -123,7 +123,7 @@ const listContractsByProvider = async (req, res) => {
   return res.status(201).json(contracts);
 };
 
-const udpateContractState = async (req, res) => {
+const qualifyContract = async (req, res) => {
   const contract =  await ContractModel.findByIdAndUpdate(
     req.params.id,
     {
@@ -136,9 +136,10 @@ const udpateContractState = async (req, res) => {
 
   if(req.body.supplier_points != undefined){
     req.body.supplier_points.forEach( async s =>{
-      await SupplierModel.findByIdAndUpdate( 
+      const supplierUpdated = await SupplierModel.findByIdAndUpdate( 
         s._id, {
-        contract_points: s.contract_points
+        number_contracts: s.number_contracts + 1,
+        contract_points: (s.contract_points + supplierUpdated.contract_points) / (s.number_contracts + 1)
       }).exec();
     })
   }
@@ -153,5 +154,5 @@ export const ContractsService = {
   addIncident: addIncident,
   addSupplier: addSupplier,
   listContractsByProvider: listContractsByProvider,
-  udpateContractState: udpateContractState
+  qualifyContract: qualifyContract
 };

@@ -12,6 +12,7 @@ const SupplierModel = new mongoose.Schema(
     state: String,
     web: String,
     contract_points: Number,
+    number_contracts: Number,
     _contract: {
       type: mongoose.ObjectId,
       ref: "Contract"
