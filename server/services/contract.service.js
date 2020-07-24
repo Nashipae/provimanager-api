@@ -114,6 +114,25 @@ const addSupplier = async (req, res) => {
   return res.status(201).json(contractFoundById);
 };
 
+const addLinkSupplier = async (req, res) => {
+  var mongoose = require('mongoose');
+  console.log(req.body.suppliers);
+  let ids = [];
+  req.body.suppliers.forEach(s=>{
+    ids.push(mongoose.Types.ObjectId(s));
+  })
+  console.log(ids);
+  const contractUpdated = await ContractModel.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: {
+          supplier_contracts: {$each: ids}
+        }
+      }, {new: true}
+    ).exec();
+  return res.status(201).json(contractUpdated);
+};
+
 const listContractsByProvider = async (req, res) => {
   const contracts =  await ContractModel.find({_provider: req.params.id})
     .populate("task_contracts")
@@ -153,6 +172,7 @@ export const ContractsService = {
   listById: listById,
   addIncident: addIncident,
   addSupplier: addSupplier,
+  addLinkSupplier: addLinkSupplier,
   listContractsByProvider: listContractsByProvider,
   qualifyContract: qualifyContract
 };

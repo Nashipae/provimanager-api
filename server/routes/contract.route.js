@@ -27,6 +27,10 @@ contractRouter.post("/contract/:id/add_supplier", (req, res) => {
     ContractsService.addSupplier(req, res)
 })
 
+contractRouter.post("/contract/:id/add_supplier_link", (req, res) => {
+    ContractsService.addLinkSupplier(req, res)
+})
+
 contractRouter.post("/contract/:id/update_task", (req, res) => {
     ContractsService.updateTask(req, res)
 })

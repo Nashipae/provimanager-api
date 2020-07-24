@@ -45,7 +45,7 @@ const listSuppliersByProvider = async (req, res) => {
   let suppliers = [];
   contracts.forEach(c => {
     c.supplier_contracts.forEach(s => {
-      suppliers.push(s);
+      if(c.state == "Activo") suppliers.push(s);
     })
   });
   return res.status(201).json(suppliers);
