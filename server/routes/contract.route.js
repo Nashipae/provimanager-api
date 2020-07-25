@@ -35,6 +35,10 @@ contractRouter.post("/contract/:id/update_task", (req, res) => {
     ContractsService.updateTask(req, res)
 })
 
+contractRouter.post("/cancelContract/:id", (req, res) => {
+    ContractsService.cancelContract(req, res)
+})
+
 contractRouter.patch("/contract/:id", (req, res) => {
     ContractsService.qualifyContract(req, res)
 })

@@ -3,7 +3,7 @@ import IncidentModel from "../models/incident.model";
 import { checkServerError } from "./utils/error-handlers";
 import { makeContractRecord } from "./utils/contract.util";
 import { makeIncidentRecord } from "./utils/incident.util";
-import { makeSupplierRecord } from "./utils/supplier.util";
+import { makeSupplierRecord, makeSupplierRecordFromObj } from "./utils/supplier.util";
 import SupplierModel from "../models/supplier.model";
 import ServiceModel from "../models/service.model";
 import ProviderModel from "../models/provider.model";
@@ -119,18 +119,41 @@ const addLinkSupplier = async (req, res) => {
   console.log(req.body.suppliers);
   let ids = [];
   req.body.suppliers.forEach(s=>{
-    ids.push(mongoose.Types.ObjectId(s));
+    if(s.type == "S") ids.push(mongoose.Types.ObjectId(s._id));
   })
-  console.log(ids);
-  const contractUpdated = await ContractModel.findByIdAndUpdate(
+  var bar = new Promise((resolve, reject) => {
+    req.body.suppliers.forEach(async (p, index, array)=>{
+      if(p.type == "P") {
+        const supplierRecord = makeSupplierRecordFromObj(p);
+        const supplier = new SupplierModel(supplierRecord);
+        console.log("SUPPLIER NUEVO");
+        console.log(supplier);
+        await supplier.save(err => {
+          if (checkServerError(res, err)) return;
+        });
+        ids.push(supplier._id);
+      }
+      if (index === array.length -1) resolve();
+    })
+  });
+  
+  bar.then(async () => {
+    console.log(ids);
+    const contractUpdated = await ContractModel.findByIdAndUpdate(
       req.params.id,
       {
-        $push: {
-          supplier_contracts: {$each: ids}
+        $addToSet: {
+          supplier_contracts: ids
         }
       }, {new: true}
-    ).exec();
-  return res.status(201).json(contractUpdated);
+    ).populate("task_contracts")
+    .populate("_service")
+    .populate("incident_contracts")
+    .populate("supplier_contracts").exec();
+
+    return res.status(201).json(contractUpdated);
+  });
+
 };
 
 const listContractsByProvider = async (req, res) => {
@@ -166,6 +189,16 @@ const qualifyContract = async (req, res) => {
   return res.status(201).json(contract);
 };
 
+const cancelContract= async (req, res) => {
+  const contract =  await ContractModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      state: "Cancelado"
+    }
+  ).exec();
+  return res.status(201).json(contract);
+}
+
 export const ContractsService = {
   create: create,
   list: list,
@@ -174,5 +207,6 @@ export const ContractsService = {
   addSupplier: addSupplier,
   addLinkSupplier: addLinkSupplier,
   listContractsByProvider: listContractsByProvider,
-  qualifyContract: qualifyContract
+  qualifyContract: qualifyContract,
+  cancelContract: cancelContract
 };

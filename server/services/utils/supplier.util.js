@@ -11,4 +11,18 @@ export const makeSupplierRecord = req => {
         web: req.body.web
     });
   };
+
+  export const makeSupplierRecordFromObj = obj => {
+    return Object.freeze({
+        contact: obj.contact,
+        company: obj.company,
+        country: obj.country,
+        email: obj.email,
+        telephone: obj.telephone,
+        cell: obj.cell,
+        ruc: obj.ruc,
+        state: obj.state,
+        web: obj.web
+    });
+  };
   
