@@ -7,8 +7,16 @@ providerRouter.post("/provider", (req, res) => {
     ProvidersService.create(req, res);
 });
 
+providerRouter.post("/deactive_provider/:id", (req, res) => {
+    ProvidersService.deactivate(req, res);
+});
+
 providerRouter.get("/provider", (req, res) => {
     ProvidersService.list(req, res);
+})
+
+providerRouter.get("/provider_filtered", (req, res) => {
+    ProvidersService.listProviderWithPoints(req, res);
 })
 
 providerRouter.get("/provider_suppliers/:id", (req, res) => {
