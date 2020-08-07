@@ -14,8 +14,17 @@ const create = async (req, res) => {
 }
 
 const list = async (req, res) => {
-  const services =  await ServiceModel.find()
-    .populate("contracts").exec();
+  const services =  await ServiceModel.find().populate([
+    {
+      path: 'contracts',
+      model: 'Contract',
+      populate: {
+        path: '_provider',
+        model: 'Provider',
+      }
+    },
+  ]).exec();
+    //.populate("contracts").exec();
   return res.status(201).json(services);
 }
 

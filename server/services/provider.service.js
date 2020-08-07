@@ -101,6 +101,7 @@ const listAverageProvider = async (req, res) => {
 const listAverageProviders = async (req, res) => {
   const providers = await ProviderModel.find();
   const scoreslist = [];
+  let provCount = 0;
   var providerPromise = new Promise((resolveProvider, reject) => {
     providers.forEach(async (value, index, array) => {
       const contracts = await ContractModel.find({ _provider: value._id });
@@ -108,26 +109,33 @@ const listAverageProviders = async (req, res) => {
       let suma_in_charge = 0;
       let suma_contract = 0;
       var contractPromise = new Promise((resolveContract, reject) => {
-        contracts.forEach(async (c, i, arr) => {
-          suma_quality += c.quality_points != undefined ? c.quality_points : 0;
-          suma_in_charge += c.in_charge_points != undefined ? c.in_charge_points : 0;
-          suma_contract += c.contract_points != undefined ? c.contract_points : 0;
-          if (i === arr.length -1) resolveContract();
-        });
+        if(contracts.length !=0 ){
+          contracts.forEach(async (c, i, arr) => {
+            suma_quality += c.quality_points != undefined ? c.quality_points : 0;
+            suma_in_charge += c.in_charge_points != undefined ? c.in_charge_points : 0;
+            suma_contract += c.contract_points != undefined ? c.contract_points : 0;
+            if (i === arr.length -1) resolveContract();
+          });
+        }else{
+          resolveContract();
+        }
       });
 
       contractPromise.then(() => {
-        let scores = {
-          provider_id: value._id,
-          provider: value.company,
-          quality_points_avg: suma_quality / contracts.filter(c => c.state == "Calificado").length,
-          in_charge_points_avg: suma_in_charge / contracts.filter(c => c.state == "Calificado").length,
-          contract_points_avg: suma_contract / contracts.filter(c => c.state == "Calificado").length,
-        };
-        if (scores.contract_points_avg) scoreslist.push(scores);
+        if(contracts.length !=0 ){
+          let scores = {
+            provider_id: value._id,
+            provider: value.company,
+            quality_points_avg: suma_quality / contracts.filter(c => c.state == "Calificado").length,
+            in_charge_points_avg: suma_in_charge / contracts.filter(c => c.state == "Calificado").length,
+            contract_points_avg: suma_contract / contracts.filter(c => c.state == "Calificado").length,
+          };
+          if (scores.contract_points_avg) scoreslist.push(scores);
+        }
+        provCount += 1;
+        if (provCount === array.length) resolveProvider();
       });
-
-      if (index === array.length -1) resolveProvider();
+      
     })
   });
 
