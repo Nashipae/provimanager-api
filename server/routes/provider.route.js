@@ -7,7 +7,7 @@ providerRouter.post("/provider", (req, res) => {
     ProvidersService.create(req, res);
 });
 
-providerRouter.post("/deactive_provider/:id", (req, res) => {
+providerRouter.put("/deactive_provider/:id", (req, res) => {
     ProvidersService.deactivate(req, res);
 });
 

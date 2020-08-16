@@ -7,6 +7,10 @@ userRouter.post("/user", (req, res) => {
     UsersService.create(req, res);
 });
 
+userRouter.post("/users", (req, res) => {
+  UsersService.createMany(req, res);
+});
+
 userRouter.get("/user", (req, res) => {
     UsersService.list(req, res);
 })

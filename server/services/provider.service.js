@@ -88,12 +88,15 @@ const listAverageProvider = async (req, res) => {
   });
 
   bar.then(() => {
+    console.log("SCORES");
+    console.log(suma_contract);
     let scores = {
-      
       quality_points_avg: suma_quality/contracts.filter(c=>c.state == "Calificado").length,
       in_charge_points_avg: suma_in_charge/contracts.filter(c=>c.state == "Calificado").length,
-      contract_points_avg: suma_contract/contracts.filter(c=>c.state == "Calificado").length,
+      contract_points_avg: suma_contract/contracts.filter(c=>(c.state == "Calificado" || c.state == "Activo")).length,
     };
+    
+    console.log(scores);
     return res.status(201).json(scores);
   });
 };
@@ -162,13 +165,13 @@ const listHistoricPoints= async (req, res) => {
 };
 
 const deactivate= async (req, res) => {
-  const contract =  await ProviderModel.findByIdAndUpdate(
+  const provider =  await ProviderModel.findByIdAndUpdate(
     req.params.id,
     {
       state: "Desactivado"
     }
   ).exec();
-  return res.status(201).json(contract);
+  return res.status(201).json(provider);
 }
 
 

@@ -39,7 +39,8 @@ const updateTask = async (req, res) => {
   .populate("_service")
   .populate("incident_contracts")
   .populate("supplier_contracts").exec();
-
+  console.log("PUNTAJE CONTRATO: ");
+  console.log(req.body.contract_points);
   return res.status(201).json(contractUpdated);
 };
 

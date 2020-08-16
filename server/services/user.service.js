@@ -18,6 +18,18 @@ const create = async (req, res) => {
   return res.status(200).json(user);
 };
 
+const createMany = async (req, res) => {
+  const strategicGoals = await UserModel.insertMany(req.body)
+  .then(function(docs) {
+       // do something with docs
+  })
+  .catch(function(err) {
+      // error handling here
+  });
+
+  return res.status(200).json(strategicGoals);
+};
+
 const list = async (req, res) => {
   const users = UserModel.find({});
   users
@@ -47,5 +59,6 @@ const returnUser = async (req, res) => {
 export const UsersService = {
   create: create,
   list: list,
-  returnUser: returnUser
+  returnUser: returnUser,
+  createMany: createMany
 };

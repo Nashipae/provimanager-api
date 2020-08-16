@@ -31,7 +31,6 @@ const create = async (req, res) => {
   
   req.body.task_contracts.forEach( async (task) => {
     const createdTask = await TasksService.createFromContract(res, task, contract._id);
-    console.log(createdTask);
     await ContractModel.findByIdAndUpdate(
       contract._id, {$push: {
         task_contracts: createdTask._id
@@ -41,7 +40,7 @@ const create = async (req, res) => {
   
   const providerSearched = await ProviderModel.findById(req.body.provider_id)
   let providerCategoria = providerSearched.category;
-  if(providerCategoria == "Básico" && (serviceUpdated.serviceCategory == "Servicio Estratégico" || serviceUpdated == "Servicio Táctico" || serviceUpdated.serviceCategory == "Servicio Operativo")){
+  if(providerCategoria == "Básico" && (serviceUpdated.serviceCategory == "Servicio Estratégico" || serviceUpdated.serviceCategory == "Servicio Táctico" || serviceUpdated.serviceCategory == "Servicio Operativo")){
     providerCategoria = serviceUpdated.serviceCategory.split(" ")[1];
   }else if(providerCategoria == "Operativo" && (serviceUpdated.serviceCategory == "Servicio Estratégico" || serviceUpdated.serviceCategory == "Servicio Táctico")){
     providerCategoria = serviceUpdated.serviceCategory.split(" ")[1];
@@ -126,8 +125,6 @@ const addLinkSupplier = async (req, res) => {
       if(p.type == "P") {
         const supplierRecord = makeSupplierRecordFromObj(p);
         const supplier = new SupplierModel(supplierRecord);
-        console.log("SUPPLIER NUEVO");
-        console.log(supplier);
         await supplier.save(err => {
           if (checkServerError(res, err)) return;
         });
@@ -174,18 +171,60 @@ const qualifyContract = async (req, res) => {
       contract_points: req.body.contract_points,
       state: req.body.state
     }
-  ).exec();
+  ).populate("_service").exec();
 
   if(req.body.supplier_points != undefined){
     req.body.supplier_points.forEach( async s =>{
+      const supplierSearched = await SupplierModel.findById(s._id);
+      console.log(contract_points);
+      console.log(number_contracts);
+      let contract_points = supplierSearched.contract_points;
+      let number_contracts = supplierSearched.number_contracts;
+      if(!number_contracts) number_contracts = 0;
+      if(!contract_points) contract_points = 0;
+      console.log(contract_points);
+      console.log(number_contracts);
+      console.log(s.contract_points);
+      console.log((s.contract_points + contract_points))
+      console.log((number_contracts + 1));
       const supplierUpdated = await SupplierModel.findByIdAndUpdate( 
         s._id, {
-        number_contracts: s.number_contracts + 1,
-        contract_points: (s.contract_points + supplierUpdated.contract_points) / (s.number_contracts + 1)
+        number_contracts: number_contracts + 1,
+        contract_points: (parseInt(s.contract_points) + parseInt(contract_points)) / (number_contracts + 1)
       }).exec();
     })
   }
 
+  const contracts =  await ContractModel.find({_provider: contract._provider}).populate("_service").exec();
+  let categoria = "";
+  
+  var contractPromise = new Promise((resolve, reject) => {
+    contracts.forEach(async (c, index, array)=>{
+      let serviceCategory = c._service.serviceCategory;
+      console.log("Categoria de servicio: ");
+      console.log(serviceCategory);
+      console.log(c.state);
+      if(c.state == "Activo"){
+        if((categoria == "Básico"||categoria == "") && (serviceCategory == "Servicio Estratégico" || serviceCategory == "Servicio Táctico" || serviceCategory == "Servicio Operativo")){
+          categoria = serviceCategory.split(" ")[1];
+        }else if(categoria == "Operativo" && (serviceCategory == "Servicio Estratégico" || serviceCategory == "Servicio Táctico")){
+          categoria = serviceCategory.split(" ")[1];
+        }else if(categoria == "Táctico" && serviceCategory == "Servicio Estratégico"){
+          categoria = serviceCategory.split(" ")[1];
+        }else categoria = serviceCategory.split(" ")[1];
+      }
+      
+      if (index === array.length -1) resolve();
+    });
+  })
+
+  contractPromise.then(async () => {
+    console.log("CATEGORIA NUEVA: ")
+    console.log(categoria);
+    const providerUpdated = await ProviderModel.findByIdAndUpdate(
+      contract._provider, {category: categoria}
+    ).exec();
+  })
   return res.status(201).json(contract);
 };
 
@@ -196,6 +235,7 @@ const cancelContract= async (req, res) => {
       state: "Cancelado"
     }
   ).exec();
+  
   return res.status(201).json(contract);
 }
 
