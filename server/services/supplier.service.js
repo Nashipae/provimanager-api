@@ -21,6 +21,22 @@ const create = async (req, res) => {
   return res.status(200).json(supplier);
 };
 
+const update = async (req, res) => {
+  const supplierUpdated =  await SupplierModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      contact: req.body.contact,
+      address: req.body.address,
+      email: req.body.email,
+      telephone: req.body.telephone,
+      cell: req.body.cell,
+      web: req.body.web
+    }, {new: true}
+  ).exec();
+  
+  return res.status(201).json(supplierUpdated);
+};
+
 const list = async (req, res) => {
   const suppliers = SupplierModel.find({});
 
@@ -36,5 +52,6 @@ const list = async (req, res) => {
 };
 export const SuppliersService = {
   create: create,
+  update: update,
   list: list
 };

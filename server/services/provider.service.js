@@ -1,6 +1,7 @@
 import ProviderModel from "../models/provider.model";
 import { checkServerError } from "./utils/error-handlers";
 import ContractModel from "../models/contract.model";
+import UserModel from "../models/user.model";
 
 const create = async (req, res) => {
   const providerRecord = Object.freeze({
@@ -14,28 +15,66 @@ const create = async (req, res) => {
     web: req.body.web,
     ruc: req.body.ruc,
     state: req.body.state,
-    provider_type: req.body.provider_type
+    provider_type: req.body.provider_type,
+    _in_charge: req.body.in_charge
   });
   const provider = new ProviderModel(providerRecord);
   await provider.save(err => {
     if (checkServerError(res, err)) return;
   });
 
+  const userUpdated = await UserModel.findByIdAndUpdate(
+    req.body.in_charge,
+    {
+      $push: {
+        _providers: provider._id
+      }
+    }
+  ).exec();
+
   return res.status(200).json(provider);
 };
 
-const list = async (req, res) => {
-  const providers = ProviderModel.find({});
+const update = async (req, res) => {
+  const providerUpdated =  await ProviderModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      contact: req.body.contact,
+      country: req.body.country,
+      address: req.body.address,
+      email: req.body.email,
+      telephone: req.body.telephone,
+      cell: req.body.cell,
+      web: req.body.web,
+      _in_charge: req.body.in_charge
+    }, {new: true}
+  ).populate("_in_charge").exec();
 
-  providers
-    .exec()
-    .then(providers => {
-      res.status(200).json(providers);
-    })
-    .catch((err, docs) => {
-      if (checkServerError(res, err)) return;
-    });
-  return res;
+  // const userUpdatedOld = await UserModel.findByIdAndUpdate(
+  //   req.body._in_charge_old,
+  //   {
+  //     $pull: {
+  //       _providers: provider._id
+  //     }
+  //   }
+  // ).exec();
+
+  const userUpdated = await UserModel.findByIdAndUpdate(
+    req.body._in_charge,
+    {
+      $set: {
+        _providers: providerUpdated._id
+      }
+    }
+  ).exec();
+  
+  return res.status(201).json(providerUpdated);
+};
+
+const list = async (req, res) => {
+  const providers =  await ProviderModel.find()
+    .populate("_in_charge").exec();
+  return res.status(201).json(providers);
 };
 
 const listProviderWithPoints = async (req, res) => {
@@ -177,6 +216,7 @@ const deactivate= async (req, res) => {
 
 export const ProvidersService = {
   create: create,
+  update: update,
   list: list,
   listSuppliersByProvider: listSuppliersByProvider,
   listAverageProvider: listAverageProvider,

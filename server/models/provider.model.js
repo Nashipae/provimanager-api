@@ -14,6 +14,10 @@ const ProviderModel = new mongoose.Schema(
     state: String,
     provider_type: String,
     category: String,
+    _in_charge: {
+      type: mongoose.ObjectId,
+      ref: "User"
+    },
     contracts: [
       {
         type: mongoose.ObjectId,

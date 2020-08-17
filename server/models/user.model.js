@@ -7,7 +7,13 @@ const UserModel = new mongoose.Schema(
     last_name: String,
     id_doc: String,
     username: String,
-    password: String
+    password: String,
+    _providers: [
+      {
+        type: mongoose.ObjectId,
+        ref: "Provider"
+      }
+    ],
   },
   { timestamps: true },
   {
