@@ -26,7 +26,7 @@ const create = async (req, res) => {
   const userUpdated = await UserModel.findByIdAndUpdate(
     req.body.in_charge,
     {
-      $push: {
+      $addToSet: {
         _providers: provider._id
       }
     }
@@ -46,28 +46,26 @@ const update = async (req, res) => {
       telephone: req.body.telephone,
       cell: req.body.cell,
       web: req.body.web,
-      _in_charge: req.body.in_charge
+      _in_charge: req.body._in_charge
     }, {new: true}
   ).populate("_in_charge").exec();
 
-  // const userUpdatedOld = await UserModel.findByIdAndUpdate(
-  //   req.body._in_charge_old,
-  //   {
-  //     $pull: {
-  //       _providers: provider._id
-  //     }
-  //   }
-  // ).exec();
-
-  const userUpdated = await UserModel.findByIdAndUpdate(
-    req.body._in_charge,
+  const userUpdatedOld = await UserModel.findByIdAndUpdate(
+    req.body._in_charge_old,
     {
-      $set: {
+      $pull: {
         _providers: providerUpdated._id
       }
     }
   ).exec();
-  
+  const userUpdated = await UserModel.findByIdAndUpdate(
+    req.body._in_charge,
+    {
+      $addToSet: {
+        _providers: providerUpdated._id
+      }
+    }
+  ).exec();
   return res.status(201).json(providerUpdated);
 };
 

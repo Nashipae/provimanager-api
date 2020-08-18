@@ -43,6 +43,11 @@ const list = async (req, res) => {
   return res;
 };
 
+const listByDni = async (req, res) => {
+  const user =  await UserModel.find({id_doc: req.params.dni})
+  return res.status(201).json(user);
+};
+
 const returnUser = async (req, res) => {
     const user = UserModel.find({username: req.params.username, password: req.params.password});
     user
@@ -59,6 +64,7 @@ const returnUser = async (req, res) => {
 export const UsersService = {
   create: create,
   list: list,
+  listByDni: listByDni,
   returnUser: returnUser,
   createMany: createMany
 };

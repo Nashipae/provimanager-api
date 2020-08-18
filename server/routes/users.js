@@ -15,8 +15,12 @@ userRouter.get("/user", (req, res) => {
     UsersService.list(req, res);
 })
 
-userRouter.get("/login/:user/:password", (req, res) => {
-  UsersService.list(req, res);
+userRouter.get("/user/:dni", (req, res) => {
+  UsersService.listByDni(req, res);
+})
+
+userRouter.get("/login/:username/:password", (req, res) => {
+  UsersService.returnUser(req, res);
 })
 
 module.exports = userRouter;
